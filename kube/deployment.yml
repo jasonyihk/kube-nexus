@@ -1,0 +1,52 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: nexus
+  labels:
+    mgr: nexus
+  namespace: repository
+spec:
+  serviceName: nexus
+  replicas: 1
+  selector:
+    matchLabels:
+      mgr: nexus
+  template:
+    metadata:
+      labels:
+        mgr: nexus
+    spec:
+      containers:
+      - name: om-nexus
+        image: 274709190364.dkr.ecr.ap-southeast-1.amazonaws.com/om.nexus:latest
+        imagePullPolicy: Always
+        ports:
+        - name: service-port
+          containerPort: 8081
+        env:
+        - name: NOTUSED
+          value:
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 250m
+          limits:
+            memory: 1200Mi
+            cpu: 1000m
+        volumeMounts:
+          - name: nexus-pvc
+            mountPath: "/nexus-data"    
+
+  volumeClaimTemplates:
+  - metadata:
+      name: nexus-pvc
+      labels:
+        type: amazonEBS
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "awsebs"
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 30Gi

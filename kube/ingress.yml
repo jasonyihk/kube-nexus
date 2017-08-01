@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nexus
+  namespace: repository
+spec:
+  rules:
+  - host: nexus-k8s.lkkhpgdi.com
+    http:
+      paths:
+      - backend:
+          serviceName: nexus-service
+          servicePort: service-port
+        path: "/"

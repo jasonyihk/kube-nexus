@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-service
+  labels:
+    mgr: nexus-service
+  namespace: repository
+spec:
+  ports:
+  - name: service-port
+    protocol: TCP
+    port: 8081
+    targetPort: service-port
+  selector:
+    mgr: nexus
+  type: ClusterIP
